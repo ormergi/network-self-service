@@ -1,0 +1,18 @@
+domain: cnv
+layout:
+- go.kubebuilder.io/v3
+plugins:
+  manifests.sdk.operatorframework.io/v2: {}
+projectName: network-self-service
+repo: github.com/ormergi/network-self-service
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: cnv
+  group: selfservice
+  kind: OverlayNetwork
+  path: github.com/ormergi/network-self-service/api/v1alpha1
+  version: v1alpha1
+version: "3"

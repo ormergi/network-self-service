@@ -1,0 +1,6 @@
+apiVersion: selfservice.cnv/v1alpha1
+kind: OverlayNetwork
+metadata:
+  name: overlaynetwork-sample
+spec:
+  # TODO(user): Add fields here
