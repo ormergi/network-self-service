@@ -1,32 +1,23 @@
----
+# permissions for end users to view userdefinednetworks.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: manager-role
+  labels:
+    app.kubernetes.io/name: test
+    app.kubernetes.io/managed-by: kustomize
+  name: userdefinednetwork-viewer-role
 rules:
 - apiGroups:
   - selfservice.cnv
   resources:
   - userdefinednetworks
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - selfservice.cnv
-  resources:
-  - userdefinednetworks/finalizers
-  verbs:
-  - update
 - apiGroups:
   - selfservice.cnv
   resources:
   - userdefinednetworks/status
   verbs:
   - get
-  - patch
-  - update

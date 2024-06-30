@@ -1,0 +1,9 @@
+apiVersion: selfservice.cnv/v1alpha1
+kind: UserDefinedNetwork
+metadata:
+  labels:
+    app.kubernetes.io/name: network-self-service
+    app.kubernetes.io/managed-by: kustomize
+  name: userdefinednetwork-sample
+spec:
+  # TODO(user): Add fields here
