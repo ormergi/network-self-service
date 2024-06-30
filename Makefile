@@ -1,5 +1,5 @@
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= localhost/controller:devel
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.30.0
 
@@ -163,6 +163,9 @@ IMAGE_TAR = "$(LOCALBIN)/img.tar"
 kind-push: kind ## Push controller container image to kind cluster nodes local registry
 	docker save ${IMG} -o ${IMAGE_TAR}
 	$(KIND) load image-archive --name=${CLUSTER_NAME} ${IMAGE_TAR}
+
+PHONY: cluster-sync
+cluster-sync: undeploy uninstall manifests generate fmt vet lint docker-build kind-push install deploy
 
 ##@ Dependencies
 
