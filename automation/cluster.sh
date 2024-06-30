@@ -18,6 +18,7 @@
 set -e
 
 SCRIPT_PATH=$(dirname "$(realpath "$0")")
+BIN_DIR="${SCRIPT_PATH}/../bin"
 
 OCI_BIN=${OCI_BIN:-podman}
 
@@ -25,8 +26,8 @@ OVN_K8S_REPO="https://github.com/ovn-org/ovn-kubernetes.git"
 OVN_K8S_BRANCH="master"
 OVN_K8S_REPO_COMMIT="b4388c5a8766e35d5ae5d63833fd7ee00cf0592f"
 
-OVN_K8S_REPO_PATH="${SCRIPT_PATH}/_ovn-k8s/"
-OVN_K8S_KIND="${SCRIPT_PATH}/_ovn-k8s/contrib"
+OVN_K8S_REPO_PATH="${BIN_DIR}/_ovn-k8s/"
+OVN_K8S_KIND="${BIN_DIR}/_ovn-k8s/contrib"
 
 KIND_VERSION=${KIND_VERSION:-v0.20.0}
 KIND_BIN=${KIND_BIN:-kind}
