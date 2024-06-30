@@ -28,3 +28,6 @@ go.work
 
 # project dependencies binaries
 bin
+
+# ovn-org/ovn-kubernetes repo clone
+automation/_ovn-k8s/

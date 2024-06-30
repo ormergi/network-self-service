@@ -143,6 +143,21 @@ deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in
 undeploy: kustomize ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/default | $(KUBECTL) delete --ignore-not-found=$(ignore-not-found) -f -
 
+##@ E2E
+
+CLUSTER_NAME ?= test
+KUBECONFIG ?= $(LOCALBIN)/test-kube.conf
+
+.PHONY: cluster-up
+cluster-up: kind ## Spins up development environment. It creates an ephemeral KinD cluster with OVN-K and Multus installed.
+	KUBECONFIG=$(KUBECONFIG) CLUSTER_NAME=$(CLUSTER_NAME) KIND_BIN=$(KIND) \
+		./automation/cluster.sh --up
+
+.PHONY: cluster-down
+cluster-down: kind ## Teaedown development environment.
+	KUBECONFIG=$(KUBECONFIG) CLUSTER_NAME=$(CLUSTER_NAME) KIND_BIN=$(KIND) \
+		./automation/cluster.sh --down
+
 ##@ Dependencies
 
 ## Location to install dependencies to
@@ -157,11 +172,15 @@ CONTROLLER_GEN ?= $(LOCALBIN)/controller-gen-$(CONTROLLER_TOOLS_VERSION)
 ENVTEST ?= $(LOCALBIN)/setup-envtest-$(ENVTEST_VERSION)
 GOLANGCI_LINT = $(LOCALBIN)/golangci-lint-$(GOLANGCI_LINT_VERSION)
 
+KIND ?= $(LOCALBIN)/kind
+
 ## Tool Versions
 KUSTOMIZE_VERSION ?= v5.4.1
 CONTROLLER_TOOLS_VERSION ?= v0.15.0
 ENVTEST_VERSION ?= release-0.18
 GOLANGCI_LINT_VERSION ?= v1.57.2
+
+KIND_VERSION ?= v0.20.0
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
@@ -196,3 +215,8 @@ GOBIN=$(LOCALBIN) go install $${package} ;\
 mv "$$(echo "$(1)" | sed "s/-$(3)$$//")" $(1) ;\
 }
 endef
+
+.PHONY: kind
+kind: $(KIND)
+$(KIND): $(LOCALBIN)
+	[ -e $(KIND) ] || curl -Lo $(KIND) "https://kind.sigs.k8s.io/dl/"${KIND_VERSION}"/kind-linux-amd64" && chmod +x $(KIND)
