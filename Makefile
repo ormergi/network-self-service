@@ -123,7 +123,7 @@ build-installer: manifests generate kustomize ## Generate a consolidated YAML wi
 ##@ Deployment
 
 ifndef ignore-not-found
-  ignore-not-found = false
+  ignore-not-found = true
 endif
 
 .PHONY: install
@@ -146,7 +146,7 @@ undeploy: kustomize ## Undeploy controller from the K8s cluster specified in ~/.
 ##@ E2E
 
 CLUSTER_NAME ?= test
-KUBECONFIG ?= $(LOCALBIN)/test-kube.conf
+export KUBECONFIG ?= $(LOCALBIN)/kube.conf
 
 .PHONY: cluster-up
 cluster-up: kind ## Spins up development environment. It creates an ephemeral KinD cluster with OVN-K and Multus installed.
@@ -157,6 +157,12 @@ cluster-up: kind ## Spins up development environment. It creates an ephemeral Ki
 cluster-down: kind ## Teaedown development environment.
 	KUBECONFIG=$(KUBECONFIG) CLUSTER_NAME=$(CLUSTER_NAME) KIND_BIN=$(KIND) \
 		./automation/cluster.sh --down
+
+IMAGE_TAR = "$(LOCALBIN)/img.tar"
+.PHONY: kind-push
+kind-push: kind ## Push controller container image to kind cluster nodes local registry
+	docker save ${IMG} -o ${IMAGE_TAR}
+	$(KIND) load image-archive --name=${CLUSTER_NAME} ${IMAGE_TAR}
 
 ##@ Dependencies
 
